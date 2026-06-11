@@ -1,0 +1,66 @@
+[
+  {
+    "feedback_id": "FB-F1-01",
+    "feature_area": "Sandbox Activation Trigger",
+    "issue_type": "UI Heuristics",
+    "severity": "Medium",
+    "description": "The 'Try 1-Click Test Onboarding' button remains active even for merchants who are already activated (first_txn_done is true). It's confusing to see a call-to-action urging me to test onboarding when the table clearly shows my test is complete. The button should change state to 'Onboarding Tested' and disable itself, or at least show a success checkmark.",
+    "user_quote": "Why is the system telling me to try checkout when I've already done it?"
+  },
+  {
+    "feedback_id": "FB-F1-02",
+    "feature_area": "Sound Synthesis",
+    "issue_type": "UX Friction",
+    "severity": "Low",
+    "description": "The payment success chime plays at full volume. In an office environment, this sudden beep is startling. There is no mute option in the drawer UI to disable simulation sounds.",
+    "user_quote": "The success sound was loud and startled my coworker. Give me a mute button!"
+  },
+  {
+    "feedback_id": "FB-F1-03",
+    "feature_area": "UPI App Mockup",
+    "issue_type": "UI Heuristics",
+    "severity": "Low",
+    "description": "Clicking 'Approve Payment' skips PIN entry entirely. While convenient, it feels too fast and doesn't explain why the secure PIN step was omitted. A small label like 'PIN bypassed for demo sandbox' below the button would educate the user.",
+    "user_quote": "It paid instantly without asking for a pin. Is it supposed to do that?"
+  },
+  {
+    "feedback_id": "FB-F1-04",
+    "feature_area": "Drawer Transactions Table",
+    "issue_type": "Functional Request",
+    "severity": "Medium",
+    "description": "The 'Simulated Payments Log' inside the drawer footer resets when I close and reopen the drawer. The payments are saved in localStorage, but the table doesn't read from it on open. It should display all historical test checkouts.",
+    "user_quote": "I did three checkouts, closed the panel, reopened it, and my log list was empty again."
+  },
+  {
+    "feedback_id": "FB-F2-01",
+    "feature_area": "KYC Dropzone Visuals",
+    "issue_type": "UI Heuristics",
+    "severity": "Low",
+    "description": "The drag-and-drop zone lacks an active hover state when dragging a file over it. Users expect the borders to light up or show an active dragover effect.",
+    "user_quote": "When I hover a file over the upload area, it doesn't change color or look like it's ready to receive it."
+  },
+  {
+    "feedback_id": "FB-F2-02",
+    "feature_area": "Smart Tab Navigation",
+    "issue_type": "UX Flow",
+    "severity": "Medium",
+    "description": "When selecting a merchant with a stalled KYC status (e.g. REJECTED) and opening the drawer, the drawer defaults to the Checkout tab. Users have to manually switch to the KYC tab. It should auto-select the KYC tab for KYC-stalled merchants.",
+    "user_quote": "If a merchant's KYC is rejected, the drawer should directly open the KYC check tab instead of the checkout sandbox."
+  },
+  {
+    "feedback_id": "FB-F2-03",
+    "feature_area": "File Format Validation",
+    "issue_type": "UI Heuristics",
+    "severity": "Low",
+    "description": "Dropping an unsupported file format or mock document in the dropzone has no feedback. It should display a clear warning indicating that only PDF, PNG, and JPEG formats are accepted.",
+    "user_quote": "I dropped a text file into the box to see what happens, and the UI stayed completely silent."
+  },
+  {
+    "feedback_id": "FB-F2-04",
+    "feature_area": "Remediation Transition",
+    "issue_type": "UX Friction",
+    "severity": "Low",
+    "description": "Clicking 'Update Profile Name to Match Document' updates the name and instantly starts the scanning spinner again. This transition is too abrupt, and users aren't sure if the name was updated first.",
+    "user_quote": "When I click update, the page instantly flashes and starts scanning again. A brief success checkmark before scanning would be nice."
+  }
+]

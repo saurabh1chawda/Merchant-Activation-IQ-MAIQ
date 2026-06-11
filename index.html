@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Merchant Activation IQ (MAIQ) - Razorpay Growth Sandbox</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Load Confetti Library for Feature 1 (High-Delight Success Animation) -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- HEADER -->
+    <header>
+      <div class="brand-section">
+        <div class="brand-logo">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22.436 0l-11.91 7.773-1.174 4.276 6.625-4.297L11.65 24h4.391l6.395-24z" fill="#3395ff"/>
+            <path d="M14.26 10.098L3.389 17.166 1.564 24h9.008l3.688-13.902Z" fill="#0a2540"/>
+          </svg>
+        </div>
+        <div class="brand-title">
+          <h1>Merchant Activation IQ (MAIQ)</h1>
+          <p>AI-Powered SME Merchant Onboarding, Retention & Monetisation Platform</p>
+        </div>
+      </div>
+      <div class="header-meta">
+        <span class="badge badge-green"><i class="fas fa-shield-alt"></i> Compliance Shield Active</span>
+        <span class="badge badge-blue"><i class="fas fa-server"></i> Sandbox Simulation Environment</span>
+      </div>
+    </header>
+
+    <!-- DASHBOARD GRID -->
+    <div class="dashboard-grid">
+      
+      <!-- LEFT SIDEBAR: Funnel & Levers -->
+      <div class="card" style="grid-row: span 2; display: flex; flex-direction: column; gap: 1.25rem;">
+        
+        <!-- MODULE 1: Funnel Visualizer -->
+        <div>
+          <div class="card-title">
+            <span><i class="fas fa-filter"></i> Onboarding Funnel (Filtered Cohort)</span>
+          </div>
+          <div id="funnel-container" class="funnel-container">
+            <!-- Rendered dynamically via app.js -->
+          </div>
+        </div>
+
+        <!-- MODULE 2: Lever Simulator & Settings -->
+        <div style="flex: 1; display: flex; flex-direction: column; justify-content: flex-end;">
+          <div class="card-title" style="margin-top: 1rem;">
+            <span><i class="fas fa-sliders-h"></i> Campaign Simulation Levers</span>
+          </div>
+          <div class="settings-section">
+            
+            <div class="control-group">
+              <div class="control-label">
+                <span>Nudge Dispatch Delay</span>
+                <span id="delay-val" class="control-val">2 Days</span>
+              </div>
+              <input type="range" id="delay-slider" class="slider-input" min="1" max="7" value="2">
+            </div>
+
+            <div class="control-group">
+              <div class="control-label">
+                <span>Activation Cash Incentive</span>
+                <span id="incentive-val" class="control-val">₹200</span>
+              </div>
+              <input type="range" id="incentive-slider" class="slider-input" min="0" max="500" step="50" value="200">
+            </div>
+
+            <div class="toggle-wrapper">
+              <div class="toggle-info">
+                <h4>Compliance Data Sanitizer</h4>
+                <p>Scrub merchant PII before processing</p>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="dsl-switch">
+                <span class="switch-slider"></span>
+              </label>
+            </div>
+
+            <!-- PLACEHOLDER FOR WELCOME INCENTIVE BADGE (FEATURE 1) -->
+            <div id="active-reward-container"></div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- COHORT MANAGER -->
+      <div class="card">
+        <div class="card-title">
+          <span><i class="fas fa-users"></i> SME Merchant Cohort Manager</span>
+          <span style="font-size: 0.75rem; color: var(--text-secondary);">Select a merchant below to run campaigns</span>
+        </div>
+        
+        <div class="cohort-header">
+          <div class="filter-bar">
+            <button class="filter-btn active" data-filter="all">All Merchants</button>
+            <button class="filter-btn" data-filter="t1">Tier 1 (High Potential)</button>
+            <button class="filter-btn" data-filter="t2">Tier 2 (Mid Potential)</button>
+            <button class="filter-btn" data-filter="t3">Tier 3 (Low Potential)</button>
+          </div>
+          
+          <div style="display: flex; gap: 0.5rem; align-items: center;">
+            <a href="#" id="download-template-link" style="font-size: 0.7rem; color: var(--accent-blue); text-decoration: none; border-bottom: 1px dashed var(--accent-blue); margin-right: 0.5rem;"><i class="fas fa-download"></i> Template.csv</a>
+            <div class="upload-btn-wrapper">
+              <button class="btn-upload"><i class="fas fa-file-upload"></i> Upload Cohort (CSV/JSON)</button>
+              <input type="file" id="csv-file-input" accept=".csv,.json">
+            </div>
+          </div>
+        </div>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Merchant ID</th>
+                <th>Business Name</th>
+                <th>Category</th>
+                <th>Est. Monthly Revenue</th>
+                <th>Potential Tier</th>
+                <th>KYC Status</th>
+              </tr>
+            </thead>
+            <tbody id="cohort-table-body">
+              <!-- Rendered dynamically via app.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- INTERVENTION GENERATOR & EXPORT -->
+      <div class="card">
+        <div class="card-title">
+          <span><i class="fas fa-magic"></i> AI Hybrid Campaign Router & Payload Compiler</span>
+        </div>
+
+        <div class="output-pane-container">
+          
+          <!-- Left Panel: Run & Message Preview -->
+          <div class="left-panel">
+            <div class="campaign-meta-run">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="run-summary-info">
+                  Selected Merchant: <span id="selected-merchant-info">None Selected</span>
+                </div>
+                <span id="selected-merchant-engine" class="engine-badge badge-heuristic">
+                  <i class="fas fa-microchip"></i> Rule-Based Routing
+                </span>
+              </div>
+              <button id="run-engine-btn" class="btn-run-engine" disabled>
+                <i class="fas fa-bolt"></i> Generate Campaign Payload
+              </button>
+              
+              <!-- FEATURE 1: SANDBOX TRIGGER BUTTON -->
+              <button id="sandbox-trigger-btn" class="btn-run-engine" style="margin-top: 0.4rem; background: var(--bg-tertiary); border: 1px solid var(--border-color);" disabled>
+                <i class="fas fa-mobile-alt"></i> Try 1-Click Test Onboarding
+              </button>
+            </div>
+            
+            <div id="preview-box" class="preview-box">
+              <div class="preview-box-empty">
+                <i class="fas fa-play-circle"></i>
+                <p>Select a merchant from the list and click "Generate Campaign Payload" to execute routing</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Panel: Comms Hub Payload Export -->
+          <div class="right-panel">
+            <div class="payload-header-row">
+              <span style="font-size: 0.75rem; font-weight: 600; color: var(--text-secondary);">Comms Hub Export Payload (JSON)</span>
+              <button id="copy-payload-btn" class="btn-copy"><i class="fas fa-copy"></i> Copy Payload</button>
+            </div>
+            <pre id="payload-code-box" class="payload-box">[]</pre>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SANDBOX DRAWER (CONSOLIDATED WORKSPACE) -->
+  <div id="sandbox-overlay" class="sandbox-overlay"></div>
+  <div id="sandbox-drawer" class="sandbox-drawer">
+    
+    <div class="drawer-header">
+      <h2><i class="fas fa-vial"></i> Interventions Sandbox</h2>
+      <div style="display: flex; gap: 0.4rem; align-items: center;">
+        <button id="sandbox-mute-btn" class="btn-exit-sandbox" style="padding: 0.35rem 0.5rem;" title="Toggle sound effects"><i class="fas fa-volume-up"></i></button>
+        <button id="exit-sandbox-btn" class="btn-exit-sandbox"><i class="fas fa-times"></i> Cancel & Exit</button>
+      </div>
+    </div>
+
+    <!-- Drawer tab header switcher (Feature 2 & 3) -->
+    <div class="drawer-tabs">
+      <button id="tab-checkout-btn" class="drawer-tab active"><i class="fas fa-shopping-cart"></i> Sandbox Checkout</button>
+      <button id="tab-ocr-btn" class="drawer-tab"><i class="fas fa-file-invoice"></i> KYC Document Check</button>
+      <button id="tab-payouts-btn" class="drawer-tab"><i class="fas fa-hand-holding-usd"></i> Payouts Sandbox</button>
+      <button id="tab-copilot-btn" class="drawer-tab"><i class="fas fa-robot"></i> AI Copilot</button>
+    </div>
+
+    <!-- TAB 1: SANDBOX CHECKOUT (FEATURE 1) -->
+    <div id="sandbox-checkout-tab-view" class="tab-view-content active">
+      <div class="sandbox-split">
+        
+        <!-- LEFT PORTAL: Mock Razorpay Checkout -->
+        <div class="mock-checkout-box">
+          <div class="checkout-header">
+            <span class="checkout-header-logo">razorpay</span>
+            <span style="font-size: 0.65rem; color: #94a3b8;"><i class="fas fa-lock"></i> SECURE SANDBOX</span>
+          </div>
+          <div class="checkout-body">
+            <h3 style="font-size: 0.95rem; font-weight: 600; color: #1e293b; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" id="checkout-merchant-title">Zephyr Electronics</h3>
+            <span style="font-size: 0.65rem; background: #e2e8f0; padding: 0.15rem 0.4rem; border-radius: 4px; color: #475569; font-weight: 600;">DEMO TRANSACTION</span>
+            <h2 style="font-size: 1.5rem; font-weight: 700; color: #0029ff; margin: 0.25rem 0;">₹10.00</h2>
+            
+            <!-- Static SVG QR Code to run offline -->
+            <svg class="checkout-qr-svg" viewBox="0 0 100 100">
+              <rect width="100" height="100" fill="white" />
+              <!-- Outer positioning squares -->
+              <rect x="5" y="5" width="25" height="25" fill="#0f172a" />
+              <rect x="9" y="9" width="17" height="17" fill="white" />
+              <rect x="12" y="12" width="11" height="11" fill="#0f172a" />
+              
+              <rect x="70" y="5" width="25" height="25" fill="#0f172a" />
+              <rect x="74" y="9" width="17" height="17" fill="white" />
+              <rect x="77" y="12" width="11" height="11" fill="#0f172a" />
+              
+              <rect x="5" y="70" width="25" height="25" fill="#0f172a" />
+              <rect x="9" y="74" width="17" height="17" fill="white" />
+              <rect x="12" y="77" width="11" height="11" fill="#0f172a" />
+              
+              <!-- Dynamic dummy data pixels -->
+              <rect x="40" y="10" width="8" height="8" fill="#0f172a" />
+              <rect x="55" y="15" width="8" height="8" fill="#0f172a" />
+              <rect x="45" y="30" width="8" height="8" fill="#0f172a" />
+              <rect x="10" y="45" width="8" height="8" fill="#0f172a" />
+              <rect x="25" y="55" width="8" height="8" fill="#0f172a" />
+              <rect x="85" y="45" width="8" height="8" fill="#0f172a" />
+              <rect x="45" y="80" width="8" height="8" fill="#0f172a" />
+              <rect x="80" y="80" width="8" height="8" fill="#0f172a" />
+              <rect x="60" y="60" width="8" height="8" fill="#0f172a" />
+              <rect x="50" y="50" width="10" height="10" fill="#0f172a" />
+              <rect x="44" y="44" width="12" height="12" fill="#0029ff" />
+            </svg>
+            
+            <p style="font-size: 0.6rem; color: #64748b; max-width: 220px; line-height: 1.3;">Scan this demo QR code or simulate using the UPI phone frame on the right.</p>
+          </div>
+          <div style="background: #f1f5f9; padding: 0.5rem; border-top: 1px solid #e2e8f0; font-size: 0.65rem; color: #64748b; text-align: center; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
+            Mock VPA: <strong id="checkout-merchant-vpa">pay-zephyr@razorpay</strong>
+          </div>
+        </div>
+
+        <!-- RIGHT PORTAL: Mock Mobile Phone UI -->
+        <div class="phone-frame">
+          <div class="phone-screen">
+            
+            <!-- Screen 1: App Selection Grid -->
+            <div id="phone-screen-apps" class="screen-state active">
+              <div style="text-align: center; margin-top: 0.5rem;">
+                <p style="font-size: 0.65rem; color: var(--text-secondary);">Simulate Scan Using UPI</p>
+                <h4 style="font-size: 0.8rem; font-weight: 600; margin-top: 0.2rem;">Choose your payment app</h4>
+              </div>
+              <div class="app-grid">
+                <button class="upi-app-btn gpay" data-app="Google Pay"><i class="fab fa-google-pay"></i><span>GPay</span></button>
+                <button class="upi-app-btn phonepe" data-app="PhonePe"><i class="fas fa-wallet"></i><span>PhonePe</span></button>
+                <button class="upi-app-btn paytm" data-app="Paytm"><i class="fas fa-mobile-alt"></i><span>Paytm</span></button>
+              </div>
+              <div style="text-align: center; font-size: 0.6rem; color: var(--text-muted); border-top: 1px solid rgba(255,255,255,0.05); padding-top: 0.5rem;">
+                Any app choice will open the demo authorization window.
+              </div>
+            </div>
+
+            <!-- Screen 2: Transaction Authorization screen -->
+            <div id="phone-screen-auth" class="screen-state">
+              <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.4rem;">
+                <span id="phone-app-header-title" style="font-weight:600; color:var(--accent-blue);">GPay</span>
+                <span style="font-size:0.55rem; color:var(--text-muted);">Secure Gateway</span>
+              </div>
+              <div style="text-align: center; margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; flex: 1; justify-content: center;">
+                <span style="font-size: 0.65rem; color: var(--text-secondary);">Paying Merchant</span>
+                <h3 id="phone-merchant-title" style="font-size: 0.8rem; font-weight:600; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; max-width: 170px; margin: 0 auto;">Zephyr Electronics</h3>
+                <h2 style="font-size: 1.5rem; font-weight: 700; color: #fff;">₹10.00</h2>
+                <p style="font-size: 0.6rem; color: var(--text-muted);">Transaction Ref: tx_sb_123456</p>
+              </div>
+              <button id="btn-approve-payment" class="btn-run-engine" style="width: 100%; font-size: 0.75rem; padding: 0.5rem; margin-top: auto;">
+                <i class="fas fa-check-circle"></i> Approve Payment
+              </button>
+              <p style="font-size: 0.5rem; color: var(--text-muted); text-align: center; margin-top: 0.25rem; font-style: italic;">*PIN entry bypassed for sandbox demo</p>
+            </div>
+
+            <!-- Screen 3: Processing & Success state -->
+            <div id="phone-screen-success" class="screen-state">
+              <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; gap: 1rem;">
+                <!-- Spinner container -->
+                <div id="phone-success-spinner" class="typing-indicator" style="display: flex;">
+                  <div class="typing-dot" style="width: 10px; height: 10px;"></div>
+                  <div class="typing-dot" style="width: 10px; height: 10px;"></div>
+                  <div class="typing-dot" style="width: 10px; height: 10px;"></div>
+                </div>
+                
+                <!-- Checkmark container (initially hidden) -->
+                <div id="phone-success-check" style="display: none; flex-direction: column; gap: 0.75rem;">
+                  <div class="success-circle"><i class="fas fa-check"></i></div>
+                  <h3 style="font-size: 0.85rem; font-weight: 600; color: var(--accent-green);">Payment Successful</h3>
+                  <p style="font-size: 0.6rem; color: var(--text-secondary);">Sandbox Ledger Updated</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- TAB 2: PRE-EMPTIVE KYC OCR CHECKER (FEATURE 2) -->
+    <div id="sandbox-ocr-tab-view" class="tab-view-content">
+      <div class="sandbox-split">
+        
+        <!-- Left: Dropzone Area with Preset documents -->
+        <div class="ocr-dropzone" id="ocr-dropzone">
+          <div id="ocr-drop-prompt">
+            <i class="fas fa-cloud-upload-alt" style="margin-bottom: 0.4rem; color: var(--accent-blue);"></i>
+            <h4 style="font-size: 0.75rem; font-weight: 600;">Drag & drop document here</h4>
+            <p style="font-size: 0.55rem; color: var(--text-muted); margin-bottom: 0.75rem;">Supports PDF, JPEG, PNG (Max 5MB)</p>
+          </div>
+          
+          <div id="ocr-drop-loader" style="display: none; flex-direction: column; align-items: center; gap: 0.4rem;">
+            <div class="typing-indicator">
+              <div class="typing-dot"></div>
+              <div class="typing-dot"></div>
+              <div class="typing-dot"></div>
+            </div>
+            <p style="font-size: 0.6rem; color: var(--accent-blue);">Pre-emptive OCR verification scanning...</p>
+          </div>
+
+          <div class="preset-assets-row" id="ocr-presets-container">
+            <button class="btn-preset-doc" id="btn-load-blur" title="Simulate Blurry PAN Card"><i class="fas fa-image"></i> Blurry PAN</button>
+            <button class="btn-preset-doc" id="btn-load-mismatch" title="Simulate Name Mismatch"><i class="fas fa-times-circle"></i> Mismatched PAN</button>
+            <button class="btn-preset-doc" id="btn-load-unsigned" title="Simulate Missing Signature"><i class="fas fa-signature"></i> Unsigned GST</button>
+            <button class="btn-preset-doc" id="btn-load-clean" title="Simulate Valid Document"><i class="fas fa-check-circle"></i> Clean PAN</button>
+          </div>
+        </div>
+
+        <!-- Right: Verification Result Terminal -->
+        <div class="ocr-audit-panel" id="ocr-audit-panel">
+          <div class="preview-box-empty" id="ocr-empty-state">
+            <i class="fas fa-file-shield" style="font-size: 2rem; color: rgba(255,255,255,0.08); margin-bottom: 0.4rem;"></i>
+            <p>Upload a file or choose a preset test document to execute local validation checks</p>
+          </div>
+          <div id="ocr-result-content" style="display: none; flex-direction: column; gap: 0.6rem; font-size: 0.7rem; line-height: 1.4;">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- TAB 3: RAZORPAY X PAYOUTS SIMULATOR (FEATURE 3) -->
+    <div id="sandbox-payouts-tab-view" class="tab-view-content">
+      <div style="display: flex; flex-direction: column; gap: 0.65rem; height: 100%; min-height: 0;">
+        
+        <!-- Wallet Balance HUD -->
+        <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); padding: 0.6rem 0.8rem; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="font-size: 0.6rem; color: var(--text-secondary);">Razorpay X Wallet Balance</div>
+            <div style="font-size: 1.1rem; font-weight: 700; color: var(--accent-green);" id="payout-wallet-balance-display">₹50,000.00</div>
+            <div style="font-size: 0.5rem; color: var(--accent-yellow); font-style: italic; margin-top: 0.1rem;">*Sandbox virtual funds - non-withdrawable.</div>
+          </div>
+          <button id="btn-recharge-wallet" class="btn-preset-doc" style="border: 1px solid rgba(16, 185, 129, 0.4); color: var(--accent-green); background: rgba(16, 185, 129, 0.08); padding: 0.35rem 0.65rem; font-weight: 600; border-radius: 6px;">
+            <i class="fas fa-sync-alt"></i> Recharge Wallet
+          </button>
+        </div>
+
+        <!-- Insufficient Balance Warning Banner -->
+        <div id="payouts-balance-warning" style="display: none; padding: 0.4rem; background: rgba(239, 68, 68, 0.1); border: 1px solid var(--accent-red); border-radius: 6px; color: var(--accent-red); font-size: 0.65rem; font-weight: 500;">
+          <i class="fas fa-exclamation-triangle"></i> Insufficient Balance. Please recharge your wallet.
+        </div>
+
+        <!-- Split Workspace (Vendors List left, Run Panel right) -->
+        <div class="sandbox-split" style="flex: 1; min-height: 0;">
+          
+          <!-- Vendor Selection List -->
+          <div style="background: rgba(0, 0, 0, 0.15); border: 1px solid var(--border-color); border-radius: 10px; padding: 0.5rem; display: flex; flex-direction: column; gap: 0.4rem; overflow-y: auto; width: 275px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding-bottom: 0.3rem; margin-bottom: 0.2rem;">
+              <label style="display: flex; align-items: center; gap: 0.3rem; font-weight: 600; font-size: 0.65rem;">
+                <input type="checkbox" id="payout-select-all-vendors"> Pay All
+              </label>
+              <span style="font-size: 0.6rem; color: var(--text-secondary);">Beneficiary List</span>
+            </div>
+            
+            <div id="payout-vendors-container" style="display: flex; flex-direction: column; gap: 0.4rem;">
+              <!-- Vendors rendered dynamically via app.js -->
+            </div>
+          </div>
+
+          <!-- Payout Execution & Terminal Results Pane -->
+          <div class="ocr-audit-panel" style="padding: 0.65rem; flex: 1; display: flex; flex-direction: column;" id="payouts-audit-panel">
+            
+            <!-- Default Empty State -->
+            <div class="preview-box-empty" id="payouts-empty-state">
+              <i class="fas fa-hand-holding-usd" style="font-size: 2rem; color: rgba(255,255,255,0.08); margin-bottom: 0.4rem;"></i>
+              <p>Select vendors from the payee list and click below to run mock batch payouts</p>
+            </div>
+
+            <!-- Staging Loading/Progress Container -->
+            <div id="payouts-progress-container" style="display: none; flex-direction: column; gap: 0.5rem; justify-content: center; height: 100%; text-align: center;">
+              <div class="typing-indicator" style="align-self: center;">
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+              </div>
+              <p id="payouts-progress-text" style="font-size: 0.65rem; color: var(--accent-blue);">Verifying vendor accounts...</p>
+              <div style="background: rgba(255, 255, 255, 0.05); height: 8px; border-radius: 4px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.08);">
+                <div id="payouts-progress-bar" style="background: var(--accent-blue); width: 0%; height: 100%; transition: width 0.3s;"></div>
+              </div>
+            </div>
+
+            <!-- Verification Mismatch Remediation Console -->
+            <div id="payouts-mismatch-panel" style="display: none; flex-direction: column; gap: 0.5rem;">
+              <div style="padding: 0.5rem; background: rgba(239, 68, 68, 0.1); border: 1px solid var(--accent-red); border-radius: 8px; color: var(--accent-red);">
+                <h4 style="font-weight:600; font-size: 0.65rem;"><i class="fas fa-exclamation-circle"></i> Beneficiary Mismatch (ERR_BENEFICIARY_MISMATCH)</h4>
+                <p style="font-size:0.55rem; margin-top:0.25rem; color: var(--text-primary);">
+                  Beneficiary bank account name mismatch detected during pre-payment check.
+                </p>
+              </div>
+              <div class="name-diff-card" style="margin-top: 0; padding: 0.5rem;">
+                <div class="diff-row">
+                  <span class="diff-label">Registered Name:</span>
+                  <span class="diff-val-bad" style="text-decoration: none; background: none; color: var(--accent-red);">Freelance Designer</span>
+                </div>
+                <div class="diff-row">
+                  <span class="diff-label">Bank Returned Name:</span>
+                  <span class="diff-val-ok">Suresh Kumar</span>
+                </div>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 0.35rem;">
+                <button id="btn-payout-remediate-correct" class="btn-remediate-name" style="margin-top:0; padding: 0.4rem; background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.4); color: var(--accent-green);">
+                  <i class="fas fa-check"></i> Verify & Correct Vendor Name
+                </button>
+                <button id="btn-payout-remediate-skip" class="btn-remediate-name" style="margin-top:0; padding: 0.4rem; background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.4); color: var(--accent-yellow);">
+                  <i class="fas fa-forward"></i> Skip Vendor & Pay Rest
+                </button>
+                <button id="btn-payout-remediate-force" class="btn-remediate-name" style="margin-top:0; padding: 0.4rem; background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.4); color: var(--accent-red);">
+                  <i class="fas fa-exclamation-triangle"></i> Force Transfer (Risk Hold)
+                </button>
+              </div>
+            </div>
+
+            <!-- Success Summary & ROI Hud -->
+            <div id="payouts-success-panel" style="display: none; flex-direction: column; gap: 0.5rem;">
+              <div style="padding: 0.5rem; background: rgba(16, 185, 129, 0.1); border: 1px solid var(--accent-green); border-radius: 8px; color: var(--accent-green); display:flex; flex-direction:column; gap:0.25rem;">
+                <h4 style="font-weight:600; font-size: 0.65rem;"><i class="fas fa-check-circle"></i> Batch Payout Processed!</h4>
+                <p style="font-size:0.55rem; color: var(--text-primary);" id="payouts-success-message">
+                  Batch payout processed successfully.
+                </p>
+              </div>
+              
+              <!-- Value Indicators (FB-CEO-01) -->
+              <div class="name-diff-card" style="margin-top: 0; padding: 0.5rem; background: rgba(51, 149, 255, 0.05); border-color: rgba(51, 149, 255, 0.2);">
+                <div class="diff-row">
+                  <span class="diff-label" style="color: var(--accent-blue); font-weight: 500;">Lock-in Value HUD</span>
+                </div>
+                <div class="diff-row" style="margin-top: 0.2rem;">
+                  <span class="diff-label">Time Saved:</span>
+                  <span style="color: var(--text-primary); font-weight: 600;">~45 Minutes</span>
+                </div>
+                <div class="diff-row">
+                  <span class="diff-label">Errors Prevented:</span>
+                  <span style="color: var(--accent-green); font-weight: 600;">100% Beneficiary Check</span>
+                </div>
+              </div>
+
+              <!-- Live Activation Bridge Checklist (FB-CPO-01) -->
+              <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.5rem; display: flex; flex-direction: column; gap: 0.3rem;">
+                <h5 style="font-size: 0.6rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.1rem;">Live Payouts Activation Checklist</h5>
+                <div style="font-size: 0.55rem; display: flex; align-items: center; gap: 0.35rem; color: var(--text-primary);"><i class="fas fa-check-circle" style="color: var(--accent-green);"></i> 1. Link Corporate Bank Account</div>
+                <div style="font-size: 0.55rem; display: flex; align-items: center; gap: 0.35rem; color: var(--text-primary);"><i class="fas fa-check-circle" style="color: var(--accent-green);"></i> 2. Upload and Verify Vendor List</div>
+                <div style="font-size: 0.55rem; display: flex; align-items: center; gap: 0.35rem; color: var(--text-primary);"><i class="fas fa-check-circle" style="color: var(--accent-green);"></i> 3. Fund Wallet & Automate Payouts</div>
+              </div>
+
+              <button class="btn-run-engine" style="margin-top: 0.25rem; font-size: 0.7rem; padding: 0.4rem; background: linear-gradient(135deg, var(--accent-green) 0%, #059669 100%); box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);" onclick="showNotification('Live Upgrade Request Registered!', 'success')">
+                <i class="fas fa-rocket"></i> Upgrade to Live Payouts
+              </button>
+            </div>
+
+            <button id="btn-execute-payout" class="btn-run-engine" style="margin-top: auto; font-size: 0.75rem; padding: 0.5rem;" disabled>
+              <i class="fas fa-file-invoice-dollar"></i> Execute Batch Payout
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Scrollable Transaction Debit Logs -->
+        <div style="border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 0.4rem; display: flex; flex-direction: column; height: 110px; min-height: 0;">
+          <span style="font-size: 0.65rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.2rem; display: flex; justify-content: space-between; align-items: center;">
+            <span>Transaction Debit Logs (Max 10 Logs)</span>
+            <span style="font-size: 0.55rem; color: var(--accent-blue); font-weight: 500;"><i class="fas fa-receipt"></i> Debits Ledger</span>
+          </span>
+          <div style="flex: 1; overflow-y: auto; border: 1px solid rgba(255, 255, 255, 0.03); border-radius: 8px;">
+            <table style="font-size: 0.6rem;">
+              <thead>
+                <tr>
+                  <th style="padding: 0.3rem 0.4rem; background: rgba(0,0,0,0.2); font-weight: 500; font-size: 0.55rem;">Payout ID</th>
+                  <th style="padding: 0.3rem 0.4rem; background: rgba(0,0,0,0.2); font-weight: 500; font-size: 0.55rem;">Vendor</th>
+                  <th style="padding: 0.3rem 0.4rem; background: rgba(0,0,0,0.2); font-weight: 500; font-size: 0.55rem;">Amount</th>
+                  <th style="padding: 0.3rem 0.4rem; background: rgba(0,0,0,0.2); font-weight: 500; font-size: 0.55rem;">Status</th>
+                  <th style="padding: 0.3rem 0.4rem; background: rgba(0,0,0,0.2); font-weight: 500; font-size: 0.55rem;">Time</th>
+                </tr>
+              </thead>
+              <tbody id="payout-transactions-log-body">
+                <!-- Populated dynamically -->
+                <tr>
+                  <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 0.8rem;">No payouts executed in this session.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- TAB 4: AI INTEGRATION COPILOT (FEATURE 4) -->
+    <div id="sandbox-copilot-tab-view" class="tab-view-content">
+      <div style="display: flex; flex-direction: column; gap: 0.65rem; height: 100%; min-height: 0;">
+        
+        <div class="sandbox-split" style="flex: 1; min-height: 0;">
+          
+          <!-- Left Column: Conversational Chat -->
+          <div style="background: rgba(0, 0, 0, 0.15); border: 1px solid var(--border-color); border-radius: 10px; padding: 0.65rem; display: flex; flex-direction: column; gap: 0.5rem; flex: 1; min-height: 0; min-width: 0;">
+            <div style="border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding-bottom: 0.4rem; font-size: 0.65rem; color: var(--text-secondary); display: flex; justify-content: space-between; align-items: center;">
+              <span><i class="fas fa-comments"></i> Integration Chat Assistant</span>
+              <span class="engine-badge badge-llm" style="padding: 0.1rem 0.3rem;"><i class="fas fa-brain"></i> Claude 3.5 Sonnet</span>
+            </div>
+            
+            <!-- Chat Messages Scroll Area -->
+            <div id="copilot-chat-messages" style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 0.5rem; padding-right: 0.2rem;">
+              <!-- Rendered dynamically -->
+            </div>
+            
+            <!-- Typing indicator -->
+            <div id="copilot-chat-typing" style="display: none; align-self: flex-start; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); padding: 0.4rem 0.6rem; border-radius: 12px 12px 12px 0; font-size: 0.65rem;">
+              <div class="typing-indicator">
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+              </div>
+            </div>
+
+            <!-- Quick Prompts row -->
+            <div id="copilot-quick-prompts" style="display: flex; gap: 0.3rem; flex-wrap: wrap;">
+              <button type="button" class="btn-preset-doc quick-prompt-btn" data-prompt="How do I generate API Keys?" style="flex: 1 1 auto; text-align: left; padding: 0.35rem; font-size: 0.6rem;">How do I generate API Keys?</button>
+              <button type="button" class="btn-preset-doc quick-prompt-btn" data-prompt="Give me a Node.js integration script." style="flex: 1 1 auto; text-align: left; padding: 0.35rem; font-size: 0.6rem;">Show integration code</button>
+              <button type="button" class="btn-preset-doc quick-prompt-btn" data-prompt="How do webhooks work?" style="flex: 1 1 auto; text-align: left; padding: 0.35rem; font-size: 0.6rem;">How do webhooks work?</button>
+            </div>
+            
+            <!-- Input Bar -->
+            <form id="copilot-chat-form" style="display: flex; gap: 0.4rem; margin-top: 0.2rem;" onsubmit="return false;">
+              <input type="text" id="copilot-chat-input" placeholder="Type a message or click a prompt..." style="flex: 1; font-size: 0.7rem; background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.4rem 0.6rem; border-radius: 6px; outline: none;" autocomplete="off">
+              <button type="submit" class="btn-copy" style="padding: 0.4rem 0.75rem;"><i class="fas fa-paper-plane"></i></button>
+            </form>
+          </div>
+
+          <!-- Right Column: Developer Utilities -->
+          <div style="width: 230px; display: flex; flex-direction: column; gap: 0.5rem; min-height: 0;">
+            
+            <!-- API Keys Status Widget -->
+            <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.5rem; display: flex; flex-direction: column; gap: 0.3rem;">
+              <span style="font-size: 0.6rem; color: var(--text-secondary); font-weight: 600;">API Credentials</span>
+              <div id="copilot-keys-status" style="font-size: 0.65rem; font-weight: 500; color: var(--accent-yellow);">
+                Status: Not Generated
+              </div>
+              <div id="copilot-keys-details" style="display: none; flex-direction: column; gap: 0.25rem; background: rgba(0, 0, 0, 0.2); padding: 0.4rem; border-radius: 6px; font-family: monospace; font-size: 0.55rem; border: 1px solid rgba(255, 255, 255, 0.03);">
+                <div>ID: <span id="copilot-key-id-val" style="color: var(--accent-blue);"></span></div>
+                <div>Secret: <span style="color: var(--text-muted);">sk_test_••••••••••••</span></div>
+              </div>
+              <button id="btn-copilot-generate-keys" class="btn-remediate-name" style="margin-top: 0.2rem; padding: 0.35rem; font-size: 0.65rem;">
+                <i class="fas fa-key"></i> Generate API Keys
+              </button>
+            </div>
+
+            <!-- Webhook Tester -->
+            <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.5rem; display: flex; flex-direction: column; gap: 0.3rem;">
+              <span style="font-size: 0.6rem; color: var(--text-secondary); font-weight: 600;">Mock Webhook Tester</span>
+              <input type="text" id="copilot-webhook-url" placeholder="https://example.com/webhook" style="font-size: 0.6rem; background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.25rem; border-radius: 4px; outline: none;">
+              <button id="btn-copilot-test-webhook" class="btn-preset-doc" style="width: 100%; border: 1px solid rgba(51, 149, 255, 0.4); color: var(--accent-blue); background: rgba(51, 149, 255, 0.08); font-weight: 600; padding: 0.35rem; border-radius: 6px;" disabled>
+                <i class="fas fa-paper-plane"></i> Send Test Webhook
+              </button>
+              <div id="copilot-webhook-log" style="display: none; background: rgba(0, 0, 0, 0.2); padding: 0.35rem; border-radius: 6px; font-size: 0.55rem; font-family: monospace; border: 1px solid rgba(255, 255, 255, 0.03); max-height: 80px; overflow-y: auto;">
+                <!-- Webhook delivery status logs -->
+              </div>
+            </div>
+
+            <!-- Code Snippets Viewer -->
+            <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.5rem; display: flex; flex-direction: column; gap: 0.3rem; flex: 1; min-height: 0;">
+              <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding-bottom: 0.25rem;">
+                <span style="font-size: 0.6rem; color: var(--text-secondary); font-weight: 600;">Integration Code</span>
+                <div style="display: flex; gap: 0.2rem;" id="copilot-code-langs">
+                  <button class="btn-preset-doc active-lang-btn" data-lang="node" style="padding: 0.1rem 0.25rem; font-size: 0.5rem; font-weight: 600; background: var(--accent-blue-glow); color: var(--accent-blue); border-color: var(--border-highlight);">JS</button>
+                  <button class="btn-preset-doc" data-lang="php" style="padding: 0.1rem 0.25rem; font-size: 0.5rem; font-weight: 600;">PHP</button>
+                  <button class="btn-preset-doc" data-lang="py" style="padding: 0.1rem 0.25rem; font-size: 0.5rem; font-weight: 600;">PY</button>
+                </div>
+              </div>
+              <div style="flex: 1; overflow-y: auto; background: #04060b; border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 6px; padding: 0.4rem; position: relative;">
+                <button id="btn-copilot-copy-code" class="btn-copy" style="position: absolute; top: 4px; right: 4px; padding: 0.15rem 0.3rem; font-size: 0.5rem;"><i class="fas fa-copy"></i></button>
+                <pre id="copilot-code-pre" style="font-family: 'JetBrains Mono', monospace; font-size: 0.5rem; color: #10b981; white-space: pre-wrap; margin-top: 0.5rem; line-height: 1.3;">Select lang...</pre>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Bottom Pane: List of sandbox transactions -->
+    <div style="border-top: 1px solid var(--border-color); padding-top: 0.5rem; display: flex; flex-direction: column; height: 110px; min-height: 0;">
+      <span style="font-size: 0.7rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.3rem; display: flex; justify-content: space-between; align-items: center;">
+        <span>Simulated Payments Log (Active Session)</span>
+        <span style="font-size: 0.55rem; color: var(--accent-red); font-weight: 500;"><i class="fas fa-exclamation-triangle"></i> DEMO FUNDS ONLY</span>
+      </span>
+      <div style="flex: 1; overflow-y: auto; border: 1px solid rgba(255, 255, 255, 0.03); border-radius: 8px;">
+        <table style="font-size: 0.65rem;">
+          <thead>
+            <tr>
+              <th style="padding: 0.4rem 0.5rem; background: rgba(0,0,0,0.2); font-weight: 500; font-size: 0.6rem;">Transaction ID</th>
+              <th style="padding: 0.4rem 0.5rem; background: rgba(0,0,0,0.2); font-weight: 500; font-size: 0.6rem;">App</th>
+              <th style="padding: 0.4rem 0.5rem; background: rgba(0,0,0,0.2); font-weight: 500; font-size: 0.6rem;">Amount</th>
+              <th style="padding: 0.4rem 0.5rem; background: rgba(0,0,0,0.2); font-weight: 500; font-size: 0.6rem;">Timestamp</th>
+            </tr>
+          </thead>
+          <tbody id="sandbox-transactions-log-body">
+            <!-- Populated dynamically -->
+            <tr>
+              <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 1rem;">No simulated payments in this session.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
