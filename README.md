@@ -1,9 +1,9 @@
 # Merchant Activation IQ (MAIQ) 🚀
 
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](https://github.com/saurabhchawda/merchant-activation-iq)
-[![Test Suite](https://img.shields.io/badge/automated%20tests-passed-emerald)](https://github.com/saurabhchawda/merchant-activation-iq)
-[![UAT Compliance](https://img.shields.io/badge/UAT%20cases-13%20certified-blue)](https://github.com/saurabhchawda/merchant-activation-iq)
-[![Tech Stack](https://img.shields.io/badge/stack-HTML%20%7C%20CSS%20%7C%20JS-blueviolet)](https://github.com/saurabhchawda/merchant-activation-iq)
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](https://merchant-activation-iq-maiq.vercel.app/)
+[![Test Suite](https://img.shields.io/badge/automated%20tests-passed-emerald)](https://github.com/saurabh1chawda/Merchant-Activation-IQ-MAIQ/blob/main/test.js)
+[![UAT Compliance](https://img.shields.io/badge/UAT%20cases-13%20certified-blue)](https://github.com/saurabh1chawda/Merchant-Activation-IQ-MAIQ/blob/main/uat.js)
+[![Tech Stack](https://img.shields.io/badge/stack-HTML%20%7C%20CSS%20%7C%20JS-blueviolet)](https://github.com/saurabh1chawda/Merchant-Activation-IQ-MAIQ/blob/main/app.js)
 
 MAIQ is an AI-powered growth engineering and campaign management system built on top of Razorpay's SME merchant database. It automates, optimizes, and secures the process of activating registered merchants who have stalled during onboarding (Registered Non-Activators - RNAs).
 
